@@ -1,0 +1,2 @@
+# exclude all of the images to save space, but keep the images folder for the scraper to work
+images/*
