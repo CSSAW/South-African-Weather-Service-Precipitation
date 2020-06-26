@@ -1,3 +1,3 @@
-# exclude all of the images to save space, but keep the images folder for the scraper to work
-images/*
-processed_data/*
+# exclude all of the images and data to save space, but keep the images and processed_data folders for the scraper to work
+images/*.jpg
+processed_data/*.csv
