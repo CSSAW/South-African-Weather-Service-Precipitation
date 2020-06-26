@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 import csv
+import glob
 
 # returns the closest range of rainfall to depending on the color of the pixel
 def getClosestRange(pixel):
@@ -34,63 +35,60 @@ def getClosestRange(pixel):
 
 
 if __name__ == "__main__":
-    # read in an image (in color)
-    img = cv2.imread('apr-2012.jpg', cv2.IMREAD_COLOR)
+    print("Looking through images directory for files")
+    # get a list of all downloaded images
+    downloadedImages = glob.glob('images/*.jpg', recursive=True)
 
-    # crop the image to focus on the Limpopo region
-    crop_img = img[106:372, 1026:1476]
+    # loop through all files and remove the directory location and file ending
+    for i in range(len(downloadedImages)):
+        downloadedImages[i] = downloadedImages[i].replace("images/", "").replace(".jpg", "")
     
-    # FOR DEBUGGING ONLY
-    # # show the cropped image
-    # cv2.imshow("cropped", crop_img)
-    # cv2.waitKey(0)
+    print("Found {} images".format(len(downloadedImages)))
+    print("Processing the data")
 
-    # get the dimensions of the cropped image
-    height = crop_img.shape[0]
-    width = crop_img.shape[1] 
+    # loop through all files that were found
+    for filename in downloadedImages:
+        # read in an image (in color)
+        img = cv2.imread('images/{}.jpg'.format(filename), cv2.IMREAD_COLOR)
 
-    # setup lists to hold data
-    fields = ['Latitude', 'Longitude', 'Rainfall (mm)']
-    tableRows = []
+        # crop the image to focus on the Limpopo region
+        crop_img = img[106:372, 1026:1476]
 
-    # the starting latitude and longitude of the square that encloses the Limpopo region (calculated using Google Earth)
-    startLong = 26.39806
-    startLat = 22.12056
+        # get the dimensions of the cropped image
+        height = crop_img.shape[0]
+        width = crop_img.shape[1] 
 
-    # loop through each pixel in the cropped image
-    for y in range(height):
-        for x in range(width):
-            # calculate the latitude and longitude based off of pixel location and conversion rate (calculated using Google Earth)
-            latitude = y * (3.30277/height) + startLat
-            longitude = x * (5.48388/width) + startLong
-            
-            # convert the gbr pixel to be rgb
-            pixel = (crop_img[y, x][2], crop_img[y, x][1], crop_img[y, x][0])
+        # setup lists to hold data
+        fields = ['Latitude', 'Longitude', 'Rainfall (mm)']
+        tableRows = []
 
-            # get the colosest rainfall range (in mm) 
-            closestRange = getClosestRange(pixel)
+        # the starting latitude and longitude of the square that encloses the Limpopo region (calculated using Google Earth)
+        startLong = 26.39806
+        startLat = 22.12056
 
-            # make sure the data is not garbage data before adding it to the table
-            if closestRange != "WHITE" and closestRange != "BLACK":
-                tableRows.append([latitude, longitude, closestRange])
+        # loop through each pixel in the cropped image
+        for y in range(height):
+            for x in range(width):
+                # calculate the latitude and longitude based off of pixel location and conversion rate (calculated using Google Earth)
+                latitude = y * (3.30277/height) + startLat
+                longitude = x * (5.48388/width) + startLong
+                
+                # convert the gbr pixel to be rgb
+                pixel = (crop_img[y, x][2], crop_img[y, x][1], crop_img[y, x][0])
 
+                # get the colosest rainfall range (in mm) 
+                closestRange = getClosestRange(pixel)
 
-    filename = "test.csv"
-
-    # open filename with write permissions as a csv file to write all the table data into the filename csv
-    with open(filename, 'w') as csvfile:
-        csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(fields)
-        csvwriter.writerows(tableRows)
+                # make sure the data is not garbage data before adding it to the table
+                if closestRange != "WHITE" and closestRange != "BLACK":
+                    tableRows.append([latitude, longitude, closestRange])
 
 
-    # (1026, 372), (1476, 106)
-    # lat = y difference, long = x difference     
-    #       left                right
-    #long = 26deg23min53sec - 31deg52min55sec    E  
-    #long = 26.39806 - 31.88194
-    #long = 5.48388
-    #       top                 bottom
-    #lat = 22deg07min14sec - 25deg25min24sec     S
-    #lat = 22.12056 - 25.42333
-    #lat = 3.30277
+
+        # open filename with write permissions as a csv file to write all the table data into the filename csv
+        with open("processed_data/{}.csv".format(filename), 'w') as csvfile:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow(fields)
+            csvwriter.writerows(tableRows)
+
+    print("Finished data processing. Check out the results under the processed_data directory")
