@@ -3,48 +3,68 @@ import numpy as np
 from matplotlib import pyplot as plt
 import csv
 
-img = cv2.imread('apr-2012.jpg', cv2.IMREAD_COLOR)
+def getClosestRange(pixel):
+    legend = {
+        "0-10": [254, 255, 53],
+        "10-25": [215, 254, 65],
+        "25-50": [151, 250, 0],
+        "50-100": [2, 234, 0],
+        "100-200": [19, 136, 156],
+        "200-500": [0, 54, 126],
+        "WHITE": [255, 255, 255],
+        "BLACK": [0, 0, 0]
+        }
 
-crop_img = img[106:372, 1026:1476]
-cv2.imshow("cropped", crop_img)
+    closestRange = "WHITE"
+    closestDistance = 999999999999
+    
+    for strRange, color in legend.items():
+        # distance formula used to find distance between colors:
+        #   formula: take the cube root of the sum of the squared differences between r, g, and b values
+        distance = (((pixel[0] - color[0])**2) + ((pixel[1] - color[1])**2) + ((pixel[2] - color[2])**2))**(1.0/3.0)
 
-cv2.waitKey(0)
+        # closer range was found; update the closest distance and range variables
+        if distance < closestDistance:
+            closestDistance = distance
+            closestRange = strRange
+    
+    return closestRange
 
-height = crop_img.shape[0]
-width = crop_img.shape[1] 
+if __name__ == "__main__":
+    img = cv2.imread('apr-2012.jpg', cv2.IMREAD_COLOR)
 
-fields = ['Latitude', 'Longitude', 'Rainfall (mm)']
-tableRows = []
-# colors = []
-# print("width: {}, height: {}".format(width, height))
+    crop_img = img[106:372, 1026:1476]
+    cv2.imshow("cropped", crop_img)
 
-startLong = 26.39806
-startLat = 22.12056
+    cv2.waitKey(0)
 
-legend = {
-    "0-10": [254, 255, 53],
-    "10-25": [215, 254, 65],
-    "25-50": [151, 250, 0],
-    "50-100": [2, 234, 0],
-    "100-200": [19, 136, 156],
-    "200-500": [0, 54, 126],
-    "WHITE": [255, 255, 255],
-    "BLACK": [0, 0, 0]
-    }
+    height = crop_img.shape[0]
+    width = crop_img.shape[1] 
 
-for y in range(height):
-    for x in range(width):
-        if crop_img[y, x][0] != 255 or crop_img[y, x][1] != 255 or crop_img[y, x][2] != 255:
+    fields = ['Latitude', 'Longitude', 'Rainfall (mm)']
+    tableRows = []
+    # colors = []
+    # print("width: {}, height: {}".format(width, height))
+
+    startLong = 26.39806
+    startLat = 22.12056
+
+    for y in range(height):
+        for x in range(width):
             latitude = y * (3.30277/height) + startLat
             longitude = x * (5.48388/width) + startLong
-            tableRows.append([latitude, longitude, crop_img[y, x]])
+            pixel = (crop_img[y, x][2], crop_img[y, x][1], crop_img[y, x][0])
+            closestRange = getClosestRange(pixel)
+            # make sure the data is not garbage data
+            if closestRange != "WHITE" and closestRange != "BLACK":
+                tableRows.append([latitude, longitude, closestRange])
 
-filename = "test.csv"
+    filename = "test.csv"
 
-with open(filename, 'w') as csvfile:
-    csvwriter = csv.writer(csvfile)
-    csvwriter.writerow(fields)
-    csvwriter.writerows(tableRows)
+    with open(filename, 'w') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(fields)
+        csvwriter.writerows(tableRows)
 
 
     # (1026, 372), (1476, 106)
