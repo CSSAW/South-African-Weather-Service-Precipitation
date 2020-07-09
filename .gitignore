@@ -1,3 +1,5 @@
 # exclude all of the images and data to save space, but keep the images and processed_data folders for the scraper to work
 images/*.jpg
 processed_data/*.csv
+pushData.py
+normalized_data/*.csv
