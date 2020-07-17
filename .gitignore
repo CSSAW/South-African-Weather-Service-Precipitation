@@ -3,3 +3,5 @@ images/*.jpg
 processed_data/*.csv
 pushData.py
 normalized_data/*.csv
+pushdata.sh
+combined_data/*.csv
