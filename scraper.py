@@ -4,14 +4,14 @@ import glob
  
 
 if __name__ == "__main__":
-    months = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"}
-    years = {"2012", "2013", "2014", "2015", "2017", "2018", "2019", "2020"}
+    months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+    years = ["2012", "2013", "2014", "2015", "2017", "2018", "2019", "2020"]
     
     failedEntries = []
     images = []
     print("Starting scraper process")
 
-    # # loop through every month in the year for each year
+    # loop through every month in the year for each year
     for i in years:
         print("Downloading data for the year {}".format(i))
         for j in months:

@@ -1,3 +1,4 @@
+import cv2
 import csv
 import glob
 
@@ -35,6 +36,7 @@ if __name__ == "__main__":
     print("Looking through images directory for files")
     # get a list of all downloaded images
     downloadedImages = glob.glob('images/*.jpg', recursive=True)
+
 
     # loop through all files and remove the directory location and file ending
     for i in range(len(downloadedImages)):
