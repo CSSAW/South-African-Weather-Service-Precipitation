@@ -5,7 +5,7 @@ import glob
 
 if __name__ == "__main__":
     months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
-    years = ["2012", "2013", "2014", "2015", "2017", "2018", "2019", "2020"]
+    years = ["2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]
     
     failedEntries = []
     images = []

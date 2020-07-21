@@ -1,6 +1,7 @@
 import cv2
 import csv
 import glob
+import time
 
 # returns the closest range of rainfall to depending on the color of the pixel
 def getClosestRange(pixel):
@@ -45,6 +46,8 @@ if __name__ == "__main__":
     print("Found {} images".format(len(downloadedImages)))
     print("Processing the data")
 
+    downloadedImages = ['dec-2015']
+
     # loop through all files that were found
     for filename in downloadedImages:
         # read in an image (in color)
@@ -79,8 +82,8 @@ if __name__ == "__main__":
                 closestRange = getClosestRange(pixel)
 
                 # make sure the data is not garbage data before adding it to the table
-                if closestRange != "WHITE" and closestRange != "BLACK":
-                    tableRows.append([latitude, longitude, closestRange])
+                #if closestRange != "WHITE" and closestRange != "BLACK":
+                tableRows.append([latitude, longitude, closestRange])
 
 
 
