@@ -24,7 +24,23 @@ def convertToCoordinates(baseX, baseY, baseX2, baseY2, baseWidth, baseHeight, ne
     return (newX, newY, newX+newRegionWidth, newY+newRegionHeight)
 
 def getRegionCoordinates(width, height):
-    pass
+    regionsByDimensions = {
+        (1755, 1239): (1026, 106, 1476, 372),
+        (1100, 850): (561, 116, 839, 281),
+        (3300, 2550): (1689, 352, 2516, 852), 
+        (1650, 1275): (841, 177, 1256, 426),
+        (1056, 816): (541, 111, 806, 271), 
+        (1320, 1020): (672, 141, 1004, 337),
+        (9350, 6617): (5356, 852, 7468, 2084),
+        (1169, 827): (687, 41, 1006, 227), 
+        (1122, 794): (651, 46, 954, 222), 
+        (1430, 1105): (729, 153, 1088, 368),
+        (6655, 5142): (3399, 708, 5060, 1700),
+        (1753, 1241): (1038, 59, 1521, 348),
+        (994, 768): (506, 106, 755, 257) 
+    }
+
+    return regionsByDimensions[(width, height)]
 
 if __name__ == "__main__":
     print("Looking through images directory for files")
@@ -42,46 +58,34 @@ if __name__ == "__main__":
     sizes = []
     files = []
 
+    downloadedImages = ['apr-2012', 'apr-2013', 'apr-2014', 'apr-2015', 'aug-2012', 'aug-2015', 'dec-2015', 'jun-2012', 'may-2012', 'nov-2015', 'oct-2012', 'oct-2018', 'sep-2017']
+
     # loop through all files that were found
     for filename in downloadedImages:
         # read in an image (in color)
         img = cv2.imread('images/{}.jpg'.format(filename), cv2.IMREAD_COLOR)
-        # month = filename[0:3]
-        # year = filename[4:]
+        month = filename[0:3]
+        year = filename[4:]
 
-        # newHeight = img.shape[1]
-        # newWidth = img.shape[0]
+        width = img.shape[1]
+        height = img.shape[0]
+        print(width, height)
 
-        # # baseHeight = 1239
-        # # baseWidth = 1755 
-        # # baseX = 1026
-        # # baseY = 106
-        # # baseX2 = 1476
-        # # baseY2 = 372
         # baseHeight = 1239
         # baseWidth = 1755 
-        # baseX = 1025
-        # baseY = 104
-        # baseX2 = 1472
-        # baseY2 = 369
+        # baseX = 1026
+        # baseY = 106
+        # baseX2 = 1476
+        # baseY2 = 372
 
-        # coords = convertToCoordinates(baseX, baseY, baseX2, baseY2, baseWidth, baseHeight, newHeight, newWidth)
+        #coords = convertToCoordinates(baseX, baseY, baseX2, baseY2, baseWidth, baseHeight, newHeight, newWidth)
+        coords = getRegionCoordinates(width, height)
 
-        # # crop the image to focus on the Limpopo region
-        # crop_img = img[coords[1]:coords[3], coords[0]:coords[2]]
+        # crop the image to focus on the Limpopo region
+        crop_img = img[coords[1]:coords[3], coords[0]:coords[2]]
 
-        # # get the dimensions of the cropped image
-        # height = crop_img.shape[0]
-        # width = crop_img.shape[1] 
-        
-        ogDims = (img.shape[1], img.shape[0])
-        if ogDims not in sizes:
-            sizes.append(ogDims)
-            files.append(filename)
+        print("Showing: {}\tSize:{}x{}".format(filename, width, height))
+        cv2.imshow("{}-{}".format(month, year, width, height), crop_img)
+        cv2.waitKey(0)
 
-        # print("Showing: {}\tSize:{}x{}".format(filename, width, height))
-        # cv2.imshow("{}-{}".format(month, year, width, height), crop_img)
-        # cv2.waitKey(0)
 
-    for i in range(len(sizes)):
-        print("Size: {}\t-\t{}".format(sizes[i], files[i]))
