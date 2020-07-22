@@ -1,7 +1,6 @@
 import cv2
 import csv
 import glob
-import time
 
 # returns the closest range of rainfall to depending on the color of the pixel
 def getClosestRange(pixel):
@@ -46,7 +45,6 @@ if __name__ == "__main__":
     print("Found {} images".format(len(downloadedImages)))
     print("Processing the data")
 
-    downloadedImages = ['dec-2015']
 
     # loop through all files that were found
     for filename in downloadedImages:
@@ -84,8 +82,6 @@ if __name__ == "__main__":
                 # make sure the data is not garbage data before adding it to the table
                 #if closestRange != "WHITE" and closestRange != "BLACK":
                 tableRows.append([latitude, longitude, closestRange])
-
-
 
         # open filename with write permissions as a csv file to write all the table data into the filename csv
         with open("processed_data/{}.csv".format(filename), 'w') as csvfile:
