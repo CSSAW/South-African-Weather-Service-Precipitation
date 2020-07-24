@@ -58,7 +58,10 @@ if __name__ == "__main__":
     sizes = []
     files = []
 
-    downloadedImages = ['apr-2012', 'apr-2013', 'apr-2014', 'apr-2015', 'aug-2012', 'aug-2015', 'dec-2015', 'jun-2012', 'may-2012', 'nov-2015', 'oct-2012', 'oct-2018', 'sep-2017']
+    #downloadedImages = ['apr-2012', 'apr-2013', 'apr-2014', 'apr-2015', 'aug-2012', 'aug-2015', 'dec-2015', 'jun-2012', 'may-2012', 'nov-2015', 'oct-2012', 'oct-2018', 'sep-2017']
+
+    #went through all newly cropped image bounds and found that these need to be redone:
+    #apr-2019, apr-2020, aug-2019, feb-2020, jun-2020
 
     # loop through all files that were found
     for filename in downloadedImages:
@@ -69,14 +72,6 @@ if __name__ == "__main__":
 
         width = img.shape[1]
         height = img.shape[0]
-        print(width, height)
-
-        # baseHeight = 1239
-        # baseWidth = 1755 
-        # baseX = 1026
-        # baseY = 106
-        # baseX2 = 1476
-        # baseY2 = 372
 
         #coords = convertToCoordinates(baseX, baseY, baseX2, baseY2, baseWidth, baseHeight, newHeight, newWidth)
         coords = getRegionCoordinates(width, height)
