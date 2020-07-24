@@ -23,7 +23,16 @@ def convertToCoordinates(baseX, baseY, baseX2, baseY2, baseWidth, baseHeight, ne
     
     return (newX, newY, newX+newRegionWidth, newY+newRegionHeight)
 
-def getRegionCoordinates(width, height):
+def getRegionCoordinates(width, height, month, year):
+    regionsByMonthYear = {
+        ('apr', '2019'): (876, 142, 1320, 404),
+        ('apr', '2020'): (1788, 260, 2706, 814),
+        ('aug', '2019'): (894, 131, 1359, 410),
+        ('feb', '2020'): (1752, 336, 2592, 844),
+        ('jun', '2020'): (1786, 262, 2702, 814),
+        ('jan', '2020'): (1756, 338, 2596, 840),
+        ('jun', '2020'): (1750, 332, 2594, 842)
+    }
     regionsByDimensions = {
         (1755, 1239): (1026, 106, 1476, 372),
         (1100, 850): (561, 116, 839, 281),
@@ -39,8 +48,10 @@ def getRegionCoordinates(width, height):
         (1753, 1241): (1038, 59, 1521, 348),
         (994, 768): (506, 106, 755, 257) 
     }
-
-    return regionsByDimensions[(width, height)]
+    if (month, year) in regionsByMonthYear:
+        return regionsByMonthYear[(month, year)]
+    else:
+        return regionsByDimensions[(width, height)]
 
 if __name__ == "__main__":
     print("Looking through images directory for files")
@@ -55,14 +66,6 @@ if __name__ == "__main__":
     print("Found {} images".format(len(downloadedImages)))
     print("Looping through cropped images")
 
-    sizes = []
-    files = []
-
-    #downloadedImages = ['apr-2012', 'apr-2013', 'apr-2014', 'apr-2015', 'aug-2012', 'aug-2015', 'dec-2015', 'jun-2012', 'may-2012', 'nov-2015', 'oct-2012', 'oct-2018', 'sep-2017']
-
-    #went through all newly cropped image bounds and found that these need to be redone:
-    #apr-2019, apr-2020, aug-2019, feb-2020, jun-2020
-
     # loop through all files that were found
     for filename in downloadedImages:
         # read in an image (in color)
@@ -74,7 +77,7 @@ if __name__ == "__main__":
         height = img.shape[0]
 
         #coords = convertToCoordinates(baseX, baseY, baseX2, baseY2, baseWidth, baseHeight, newHeight, newWidth)
-        coords = getRegionCoordinates(width, height)
+        coords = getRegionCoordinates(width, height, month, year)
 
         # crop the image to focus on the Limpopo region
         crop_img = img[coords[1]:coords[3], coords[0]:coords[2]]
