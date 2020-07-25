@@ -2,27 +2,7 @@ import cv2
 import csv
 import glob
 
-def convertToCoordinates(baseX, baseY, baseX2, baseY2, baseWidth, baseHeight, newWidth, newHeight):
-    # get the scale factors for the new image compared to the original test image
-    widthScale = float(newWidth) / float(baseWidth)
-    heightScale = float(newHeight) / float(baseHeight) 
-    print("NEW W={}\t\tH={}\t\tOLD W={}\t\tH={}".format(newWidth, newHeight, baseWidth, baseHeight))
-    print("SCALES: W={}\t\tH={}".format(widthScale, heightScale))
-
-    # compare the scaling of the coordinates of the original region to the size of the original image
-    xScale = float(baseX) / float(baseWidth)
-    yScale = float(baseY) / float(baseHeight)
-
-    # get starting coordinates of region in new image
-    newX = int(xScale * newWidth)
-    newY = int(yScale * newHeight)
-
-    # get width and height of region in new image
-    newRegionWidth = int((baseX2 - baseX) * widthScale)
-    newRegionHeight = int((baseY2 - baseY) * heightScale)
-    
-    return (newX, newY, newX+newRegionWidth, newY+newRegionHeight)
-
+# returns the cropped coordinates of the Limpopo region in the image given the image width, height, month and year
 def getRegionCoordinates(width, height, month, year):
     regionsByMonthYear = {
         ('apr', '2019'): (876, 142, 1320, 404),
@@ -76,7 +56,7 @@ if __name__ == "__main__":
         width = img.shape[1]
         height = img.shape[0]
 
-        #coords = convertToCoordinates(baseX, baseY, baseX2, baseY2, baseWidth, baseHeight, newHeight, newWidth)
+        # get coordinates of Limpopo region
         coords = getRegionCoordinates(width, height, month, year)
 
         # crop the image to focus on the Limpopo region
