@@ -110,7 +110,6 @@ def getSample(img, x, y, xEnd, yEnd):
 
     # return the average of all non-garbage data in the region
     if numValues > 0:
-        #print("SUM: {}".format(totalValues))
         return totalValues / float(numValues) 
     # return -1 if there are no values to average     
     else:
@@ -151,14 +150,9 @@ if __name__ == "__main__":
         # crop the image to focus on the Limpopo region
         crop_img = img[coords[1]:coords[3], coords[0]:coords[2]]
 
-        #cv2.imshow("{}-{}".format(month, year, width, height), crop_img)
-        #cv2.waitKey(0)
-
         # get the dimensions of the cropped image
         croppedHeight = crop_img.shape[0]
         croppedWidth = crop_img.shape[1] 
-
-        #print("HEIGHT: {}".format(croppedHeight))
 
         # setup lists to hold data
         fields = ['Latitude', 'Longitude', 'Rainfall (mm)']

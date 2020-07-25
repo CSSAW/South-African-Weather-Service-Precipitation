@@ -1,21 +1,13 @@
 import csv
 import glob
-from collections import deque
 
 # using minmax for normalization
-def normalize(range):
-    normalizedRanges = {
-        "0-10": 0,
-        "10-25": 0.0306,
-        "25-50": 0.0815,
-        "50-100": 0.1837,
-        "100-200": 0.4082,
-        "200-500": 1,
-        "WHITE": 0,
-        "BLACK": 0
-    }
+def normalize(value):
+    # define the max and min available for the dataset for minmax normalization
+    dataMax = 350
+    dataMin = 5
 
-    return normalizedRanges[range]
+    return (float(value) - dataMin) / (dataMax - dataMin)
 
 # returns the number of days in a month given the month and year
 def getNumDaysInMonth(month, year):
@@ -29,34 +21,9 @@ def getNumDaysInMonth(month, year):
     else:
         return 31
 
-# returns the month number of the year
-def getMonthNumber(month):
-    if month == "jan":
-        return 1
-    elif month == "feb":
-        return 2
-    elif month == "mar":
-        return 3
-    elif month == "apr":
-        return 4
-    elif month == "may":
-        return 5
-    elif month == "jun":
-        return 6
-    elif month == "jul":
-        return 7
-    elif month == "aug":
-        return 8
-    elif month == "sep":
-        return 9
-    elif month == "oct":
-        return 10
-    elif month == "nov":
-        return 11
-    else:
-        return 12
-
 if __name__ == "__main__":
+    months = ['jan', "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+
     # get a list of all data files
     dataFiles = glob.glob('processed_data/*.csv', recursive=True)
 
@@ -88,7 +55,7 @@ if __name__ == "__main__":
             numDays = getNumDaysInMonth(month, year)
             # for every day in the month, format the date and push in all relevant data for that day
             for day in range(numDays):
-                formattedDate = "{}-{}-{}".format(getMonthNumber(month), day+1, year)
+                formattedDate = "{}-{}-{}".format(months.index(month), day+1, year)
                 for data in oldData:
                     tableRows.append([formattedDate, data[0], data[1], data[2]])
 
