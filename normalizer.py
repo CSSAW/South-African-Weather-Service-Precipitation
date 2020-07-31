@@ -55,7 +55,7 @@ if __name__ == "__main__":
             numDays = getNumDaysInMonth(month, year)
             # for every day in the month, format the date and push in all relevant data for that day
             for day in range(numDays):
-                formattedDate = "{}-{}-{}".format(months.index(month), day+1, year)
+                formattedDate = "{}-{}-{}".format(months.index(month) + 1, day+1, year)
                 for data in oldData:
                     tableRows.append([formattedDate, data[0], data[1], data[2]])
 
